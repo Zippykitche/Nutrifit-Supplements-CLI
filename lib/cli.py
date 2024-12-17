@@ -1,9 +1,9 @@
 import click
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from db.models.supplement import Supplement
-from db.models.user import User
-from db.models.cart import Cart
+from lib.db.models.supplement import Supplement
+from lib.db.models.user import User
+from lib.db.models.cart import Cart
 
 
 engine = create_engine('sqlite:///nutrifit.db')
@@ -109,6 +109,61 @@ def view_cart():
     else:
         click.echo("No cart entries found.")
 
+# ---- New Menus ----
+
+@cli.command()
+def main_menu():
+    """Main Menu."""
+    while True:
+        click.echo("\n--- Main Menu ---")
+        click.echo("1. Manage Users")
+        click.echo("2. Manage Supplements")
+        click.echo("3. Manage Cart")
+        click.echo("4. Exit")
+        choice = input("Enter your choice: ").strip()
+
+        if choice == "1":
+            user_menu()
+        elif choice == "2":
+            supplement_menu()
+        elif choice == "3":
+            cart_menu()
+        elif choice == "4":
+            click.echo("Exiting NutriFit CLI. Goodbye!")
+            break
+        else:
+            click.echo("Invalid choice. Please try again.")
+
+def user_menu():
+    """User Management Menu."""
+    while True:
+        click.echo("\n--- User Menu ---")
+        click.echo("1. View All Users")
+        click.echo("2. Add User")
+        click.echo("3. Delete User")
+        click.echo("4. Return to Main Menu")
+        choice = input("Enter your choice: ").strip()
+        
+
+def supplement_menu():
+    """Supplement Management Menu."""
+    while True:
+        click.echo("\n--- Supplement Menu ---")
+        click.echo("1. View All Supplements")
+        click.echo("2. Add Supplement")
+        click.echo("3. Delete Supplement")
+        click.echo("4. Return to Main Menu")
+        choice = input("Enter your choice: ").strip()
+       
+
+def cart_menu():
+    """Cart Management Menu."""
+    while True:
+        click.echo("\n--- Cart Menu ---")
+        click.echo("1. View All Cart Entries")
+        click.echo("2. Return to Main Menu")
+        choice = input("Enter your choice: ").strip()
+       
 
 if __name__ == "__main__":
     cli()
