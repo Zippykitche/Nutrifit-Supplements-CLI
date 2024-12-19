@@ -1,13 +1,21 @@
-from lib.db.models.supplement import Base, Supplement, User, Cart
+from db.models import Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from faker import Faker
 import random
+import os
+
+
+from db.models.supplement import Supplement
+from db.models.user import User
+from db.models.cart import Cart
 
 fake = Faker()
 
-engine = create_engine('sqlite:///nutrifit.db', echo=True)
+db_path = os.path.join(os.path.dirname(__file__), 'nutrifit.db')
+engine = create_engine(f'sqlite:///{db_path}', echo=True)
 Base.metadata.create_all(engine)
+
 Session = sessionmaker(bind=engine)
 session = Session()
 
@@ -40,20 +48,30 @@ def seed_users(n=5):
 def seed_cart_entries(n=15):
     users = session.query(User).all()
     supplements = session.query(Supplement).all()
+
     if not users or not supplements:
         print("Ensure that users and supplements are seeded before adding cart entries.")
         return
 
     cart_entries = []
     for _ in range(n):
+        user = random.choice(users)
+        supplement = random.choice(supplements)
+
+        if not user or not supplement:
+            continue
+
         entry = Cart(
-            user_id=random.choice(users).id,
-            supplement_id=random.choice(supplements).id,
+            user_id=user.id,
+            supplement_id=supplement.id,
             quantity=random.randint(1, 5)
         )
         cart_entries.append(entry)
+
     session.add_all(cart_entries)
+    session.commit()  
     print(f"Seeded {n} cart entries.")
+
 
 def main():
     session.query(Cart).delete()

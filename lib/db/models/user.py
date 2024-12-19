@@ -1,8 +1,7 @@
-from sqlalchemy.orm import declarative_base, relationship
+from db.models import Base
+from sqlalchemy.orm import relationship
 from sqlalchemy import Column, Integer, String, Float, ForeignKey
 
-
-Base = declarative_base()
 
 class User(Base):
     __tablename__ = 'users'
@@ -11,7 +10,7 @@ class User(Base):
     name = Column(String, nullable=False)
     email = Column(String, nullable=False, unique=True)
 
-    carts = relationship('Cart', back_populates='user')
+    carts = relationship('Cart', back_populates='user', foreign_keys="[Cart.user_id]")
 
     def __repr__(self):
         return f"<User(name='{self.name}', email='{self.email}')>"

@@ -1,7 +1,7 @@
-from sqlalchemy.orm import declarative_base, relationship
+from db.models import Base
+from sqlalchemy.orm import relationship
 from sqlalchemy import Column, Integer, String, Float, ForeignKey
 
-Base = declarative_base()
 
 class Supplement(Base):
     __tablename__ = 'supplements'
@@ -13,8 +13,10 @@ class Supplement(Base):
     quantity = Column(Integer, default=0)
     category = Column(String)
 
+    cart_items = relationship('Cart', back_populates='supplement', foreign_keys='Cart.supplement_id')
+
     def __repr__(self):
-        return f"<Supplement(name='{self.name}', price={self.price}, quantity={self.quantity}, category={self.category})>"
+        return f"<Supplement(name='{self.name}', description={self.description}, price={self.price}, quantity={self.quantity}, category={self.category})>"
     
     @property
     def is_in_stock(self):
