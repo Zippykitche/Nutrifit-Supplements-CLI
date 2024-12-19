@@ -45,7 +45,7 @@ def seed_users(n=5):
     session.add_all(users)
     print(f"Seeded {n} users.")
 
-def seed_cart_entries(n=15):
+def seed_cart_entries(n=5):
     users = session.query(User).all()
     supplements = session.query(Supplement).all()
 
@@ -58,10 +58,13 @@ def seed_cart_entries(n=15):
         user = random.choice(users)
         supplement = random.choice(supplements)
 
+        # Ensure both user and supplement are valid
         if not user or not supplement:
             continue
 
         entry = Cart(
+            user_name=user.name,
+            supplement_name=supplement.id,
             user_id=user.id,
             supplement_id=supplement.id,
             quantity=random.randint(1, 5)
@@ -81,7 +84,7 @@ def main():
 
     seed_supplements(10)
     seed_users(5)
-    seed_cart_entries(15)
+    seed_cart_entries(5)
 
     session.commit()
     print("Database seeding completed successfully!")
